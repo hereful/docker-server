@@ -1,0 +1,33 @@
+version: '2.0'
+services:
+  web:
+    build: web/.
+    restart: always
+    ports:
+      - "80:80"
+    links:
+      - db:mysql
+    volumes:
+    - "../web-php:/var/www/laravel"
+  db:
+    image: mysql:5.7
+    volumes:
+      - "./.data/db:/var/lib/mysql"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: hereful
+      MYSQL_DATABASE: hereful
+      MYSQL_USER: hereful
+      MYSQL_PASSWORD: hereful
+  myadmin:
+      image: phpmyadmin/phpmyadmin
+      restart: always
+      links:
+      - db:mysql
+      environment:
+        PMA_ARBITRARY: "1"
+        PMA_HOST: mysql
+      ports:
+        - 8080:80
+      volumes:
+        - "./session:/sessions"
